@@ -1,0 +1,29 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace ReservaHotelCore.Models
+{
+    public class Hotel
+    {
+        public string HotelName { get; set; }
+        public int Classification { get; set; }
+        public double TaxWeek { get; set; }
+        public double TaxWeekend { get; set; }
+        public double totalPrice { 
+            get 
+            { 
+                return this.TaxWeek + this.TaxWeekend; 
+            } 
+        }
+
+        public Hotel(string hotelName, int classification, double TaxWeek, double TaxWeekend)
+        {
+            this.HotelName = hotelName;
+            this.Classification = classification;
+            this.TaxWeek = TaxWeek;
+            this.TaxWeekend = TaxWeekend;
+        }
+
+    }
+}

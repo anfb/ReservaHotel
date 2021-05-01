@@ -11,8 +11,8 @@ namespace ReservaHotelCore.Models
     {
         public const int CUSTOM_STRING_INDEX = 0;
         public const int DATES_STRING_INDEX = 1;
-        public CustomType customType { get; set; }
-        public List<DateTime> dates { get; set; }
+        public CustomType customType { get; private set; }
+        public List<DateTime> dates { get; private set; }
 
         public BookingRequest(string textRequest)
         {
@@ -25,20 +25,21 @@ namespace ReservaHotelCore.Models
             string[] inputStrings = textRequest.Split(':');
             if (Enum.IsDefined(typeof(CustomType), inputStrings[CUSTOM_STRING_INDEX]))
             {
-                this.customType = inputStrings[CUSTOM_STRING_INDEX].Equals(CustomType.Regular) ? CustomType.Regular : CustomType.Reward;
+                this.customType = inputStrings[CUSTOM_STRING_INDEX].Equals(CustomType.Regular.ToString()) ? CustomType.Regular : CustomType.Reward;
 
                 try
                 {
-                    (inputStrings[DATES_STRING_INDEX].Split(',')).ToList().ForEach(d => dates.Add(DateTime.ParseExact(d.Trim(), "ddMMMyyyy", CultureInfo.InvariantCulture)));
+                    (inputStrings[DATES_STRING_INDEX].Split(',')).ToList().ForEach(d =>
+                         dates.Add(DateTime.ParseExact(d.Split('(')[0].Trim(), "ddMMMyyyy", CultureInfo.InvariantCulture)));
                 }
-                catch(ArgumentException e)
+                catch(Exception)
                 {
-                    
+                    throw new ArgumentException("Client type or some date is incorrect, plese use the format: <tipo_do_cliente>: <data1>, <data2>, <data3>, …");
                 }
             }
             else
             {
-                throw new ArgumentException("Client type does note exist.");
+                throw new ArgumentException("Client type or some date is incorrect, plese use the format: <tipo_do_cliente>: <data1>, <data2>, <data3>, …");
             }
         }
     }
