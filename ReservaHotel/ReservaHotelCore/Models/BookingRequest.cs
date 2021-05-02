@@ -11,12 +11,14 @@ namespace ReservaHotelCore.Models
     {
         public const int CUSTOM_STRING_INDEX = 0;
         public const int DATES_STRING_INDEX = 1;
-        public CustomType customType { get; private set; }
-        public List<DateTime> dates { get; private set; }
+        public CustomerType CustomerType { get; private set; }
+        public List<DateTime> Dates { get; private set; }
+        public int NumberWeekDays { get { return Dates.Count(d => d.DayOfWeek != DayOfWeek.Saturday && d.DayOfWeek != DayOfWeek.Sunday); } }
+        public int NumberWeekendDays { get { return Dates.Count() - NumberWeekDays; } }
 
         public BookingRequest(string textRequest)
         {
-            dates = new List<DateTime>();
+            Dates = new List<DateTime>();
             DataValidation(textRequest);
         }
 
@@ -24,25 +26,25 @@ namespace ReservaHotelCore.Models
         {
             string[] inputStrings = textRequest.Split(':');
 
-            bool IsEnumCustomType = Enum.IsDefined(typeof(CustomType), inputStrings[CUSTOM_STRING_INDEX]);
-            if (IsEnumCustomType)
+            try
             {
-                this.customType = inputStrings[CUSTOM_STRING_INDEX].Equals(CustomType.Regular.ToString()) ? CustomType.Regular : CustomType.Reward;
+            this.CustomerType = (CustomerType)Enum.Parse(typeof(CustomerType), inputStrings[CUSTOM_STRING_INDEX]);
+
             }
-            else
+            catch
             {
-                throw new ArgumentException("User type Error. Plese use the format: <tipo_do_cliente>: <data1>, <data2>, <data3>, …");
+                throw new ArgumentException("Customer type should be Regular or Fidelidade.");
             }
 
             try
             {
-                (inputStrings[DATES_STRING_INDEX].Split(',')).ToList().ForEach(d =>
-                                                    dates.Add(DateTime.ParseExact(d.Split('(')[0].Trim(), "ddMMMyyyy", CultureInfo.InvariantCulture)));
+                inputStrings[DATES_STRING_INDEX].Split(',').ToList().ForEach(d => 
+                            Dates.Add(DateTime.ParseExact(d.Split('(')[0].Trim(), "ddMMMyyyy", CultureInfo.InvariantCulture)));
+
             }
-             
-            catch(Exception)
+            catch
             {
-                throw new ArgumentException("Error in Date format. Plese use the format: <tipo_do_cliente>: <data1>, <data2>, <data3>, …");
+                throw new ArgumentException("Date format is invalid.");
             }
         }
     }

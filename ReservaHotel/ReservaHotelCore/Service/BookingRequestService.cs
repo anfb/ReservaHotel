@@ -11,29 +11,27 @@ namespace ReservaHotelCore.Service
     {
         public string GetCheapestHotel(string textRequest)
         {
-            List<Hotel> Hotels = new List<Hotel>();
+            List<Hotel> hotels = new List<Hotel>();
 
             BookingRequest bookingRequest = new BookingRequest(textRequest);
-            int numberDayOfWeek = bookingRequest.dates.Count(dWk => dWk.DayOfWeek != DayOfWeek.Saturday && dWk.DayOfWeek != DayOfWeek.Sunday);
-            int numberDayWeekend = bookingRequest.dates.Count(dWnd => dWnd.DayOfWeek == DayOfWeek.Sunday || dWnd.DayOfWeek == DayOfWeek.Saturday);
 
-            if (bookingRequest.customType.Equals(CustomType.Regular))
-            {
-                Hotels.Add(new Hotel("Parque das flores", 3, 110*numberDayOfWeek, 90*numberDayWeekend));
-                Hotels.Add(new Hotel("Jardim Botânico", 4, 160*numberDayOfWeek, 60*numberDayWeekend));
-                Hotels.Add(new Hotel("Mar Atlântico", 5, 220*numberDayOfWeek, 150*numberDayWeekend));
-            }
-            else
-            {
-                Hotels.Add(new Hotel("Parque das flores", 3, 80 * numberDayOfWeek, 80 * numberDayWeekend));
-                Hotels.Add(new Hotel("Jardim Botânico", 4, 110 * numberDayOfWeek, 50 * numberDayWeekend));
-                Hotels.Add(new Hotel("Mar Atlântico", 5, 100 * numberDayOfWeek, 40 * numberDayWeekend));
-            }
+            hotels.Add(new Hotel(
+                hotelName: "Parque das flores", 
+                classification: 3, 
+                taxWeek: (bookingRequest.CustomerType == CustomerType.Regular ? 110 : 80)*bookingRequest.NumberWeekDays, 
+                taxWeekend: (bookingRequest.CustomerType == CustomerType.Regular ? 90 : 80)*bookingRequest.NumberWeekendDays));
+            hotels.Add(new Hotel(
+                hotelName: "Jardim Botânico", 
+                classification: 4, 
+                taxWeek: (bookingRequest.CustomerType == CustomerType.Regular ? 160 : 110)*bookingRequest.NumberWeekDays, 
+                taxWeekend: (bookingRequest.CustomerType == CustomerType.Regular ? 60 : 50)*bookingRequest.NumberWeekendDays));
+            hotels.Add(new Hotel(
+                hotelName: "Mar Atlântico", 
+                classification: 5, 
+                taxWeek: (bookingRequest.CustomerType == CustomerType.Regular ? 220 : 100)*bookingRequest.NumberWeekDays, 
+                taxWeekend: (bookingRequest.CustomerType == CustomerType.Regular ? 150 : 40)*bookingRequest.NumberWeekendDays));
 
-            Hotel hotel =  Hotels.OrderBy(h => h.totalPrice)
-                                    .ThenByDescending(h => h.Classification).FirstOrDefault();
-
-            return hotel.HotelName;
+            return hotels.OrderBy(h => h.totalPrice).ThenByDescending(h => h.Classification).FirstOrDefault().HotelName;
         }
 
     }

@@ -17,12 +17,12 @@ namespace ReservaHotelCore.Models
             } 
         }
 
-        public Hotel(string hotelName, int classification, double TaxWeek, double TaxWeekend)
+        public Hotel(string hotelName, int classification, double taxWeek, double taxWeekend)
         {
             this.HotelName = hotelName;
             this.Classification = classification;
-            this.TaxWeek = TaxWeek;
-            this.TaxWeekend = TaxWeekend;
+            this.TaxWeek = taxWeek;
+            this.TaxWeekend = taxWeekend;
         }
 
     }

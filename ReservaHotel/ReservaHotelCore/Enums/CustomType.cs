@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ReservaHotelCore.Enums
 {
-    public enum CustomType
+    public enum CustomerType
     {
         Regular,
         Reward
