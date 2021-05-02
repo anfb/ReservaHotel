@@ -7,12 +7,12 @@ using System.Text;
 
 namespace ReservaHotelCore.Service
 {
-    public static class BookingRequestService
+    public class BookingRequestService
     {
-        public static List<Hotel> Hotels = new List<Hotel>();
-        
-        public static string GetCheapestHotel(string textRequest)
+        public string GetCheapestHotel(string textRequest)
         {
+            List<Hotel> Hotels = new List<Hotel>();
+
             BookingRequest bookingRequest = new BookingRequest(textRequest);
             int numberDayOfWeek = bookingRequest.dates.Count(dWk => dWk.DayOfWeek != DayOfWeek.Saturday && dWk.DayOfWeek != DayOfWeek.Sunday);
             int numberDayWeekend = bookingRequest.dates.Count(dWnd => dWnd.DayOfWeek == DayOfWeek.Sunday || dWnd.DayOfWeek == DayOfWeek.Saturday);
