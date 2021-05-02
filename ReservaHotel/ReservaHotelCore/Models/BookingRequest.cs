@@ -23,23 +23,26 @@ namespace ReservaHotelCore.Models
         private void DataValidation(string textRequest)
         {
             string[] inputStrings = textRequest.Split(':');
-            if (Enum.IsDefined(typeof(CustomType), inputStrings[CUSTOM_STRING_INDEX]))
+
+            bool IsEnumCustomType = Enum.IsDefined(typeof(CustomType), inputStrings[CUSTOM_STRING_INDEX]);
+            if (IsEnumCustomType)
             {
                 this.customType = inputStrings[CUSTOM_STRING_INDEX].Equals(CustomType.Regular.ToString()) ? CustomType.Regular : CustomType.Reward;
-
-                try
-                {
-                    (inputStrings[DATES_STRING_INDEX].Split(',')).ToList().ForEach(d =>
-                         dates.Add(DateTime.ParseExact(d.Split('(')[0].Trim(), "ddMMMyyyy", CultureInfo.InvariantCulture)));
-                }
-                catch(Exception)
-                {
-                    throw new ArgumentException("Client type or some date is incorrect, plese use the format: <tipo_do_cliente>: <data1>, <data2>, <data3>, …");
-                }
             }
             else
             {
-                throw new ArgumentException("Client type or some date is incorrect, plese use the format: <tipo_do_cliente>: <data1>, <data2>, <data3>, …");
+                throw new ArgumentException("User type Error. Plese use the format: <tipo_do_cliente>: <data1>, <data2>, <data3>, …");
+            }
+
+            try
+            {
+                (inputStrings[DATES_STRING_INDEX].Split(',')).ToList().ForEach(d =>
+                                                    dates.Add(DateTime.ParseExact(d.Split('(')[0].Trim(), "ddMMMyyyy", CultureInfo.InvariantCulture)));
+            }
+             
+            catch(Exception)
+            {
+                throw new ArgumentException("Error in Date format. Plese use the format: <tipo_do_cliente>: <data1>, <data2>, <data3>, …");
             }
         }
     }

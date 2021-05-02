@@ -24,5 +24,12 @@ namespace ReservaHotelTest
             Assert.Equal(CustomType.Reward, inputRequest.customType);
         }
 
+        [Fact]
+        public void NumberOfDatesEnteredTest()
+        {
+            string input = "Reward: 16Mar2020(mon), 17Mar2020(tues), 18Mar2020(wed)";
+            BookingRequest inputRequest = new BookingRequest(input);
+            Assert.Equal(3, inputRequest.dates.Count);
+        }
     }
 }
